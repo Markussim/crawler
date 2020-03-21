@@ -41,7 +41,8 @@ public class crawlerClass {
             try { //This is just to make it more readable
                 Thread.sleep(1000);
             } catch (Exception e) {
-                System.out.println(e);
+                System.out.println("e");
+                break;
             }
         }
     }
