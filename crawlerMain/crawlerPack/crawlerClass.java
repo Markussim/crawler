@@ -1,15 +1,12 @@
 package crawlerPack;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class crawlerClass {
     public static void main(String[] args) throws IOException {
-        URL startUrl = new URL("https://google.com");
+        URL startUrl = new URL("https://marksism.space");
 
         if (startUrl.getProtocol().equals("https")) { //Checks if the link is in https
             System.out.println("It worked!");
@@ -30,6 +27,10 @@ public class crawlerClass {
             String theHtml = getDataFromUrl(nextUrl);
             System.out.println(getUrl(theHtml));
             nextUrl = getUrl(theHtml);
+            String filename = "links.txt";
+            FileWriter fw = new FileWriter(filename,true); //the true will append the new data
+            fw.write(nextUrl + "\n");//appends the string to the file
+            fw.close();
         }
     }
 
