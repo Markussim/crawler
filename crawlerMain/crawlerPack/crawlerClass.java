@@ -3,6 +3,12 @@ package crawlerPack;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class crawlerClass {
     public static void main(String[] args) throws IOException {
@@ -21,16 +27,17 @@ public class crawlerClass {
         }
 
         URL nextUrl = getUrl(getDataFromUrl(startUrl));
-        System.out.println(nextUrl);
 
         while (true) {
             String theHtml = getDataFromUrl(nextUrl);
-            System.out.println(getUrl(theHtml));
             nextUrl = getUrl(theHtml);
-            String filename = "links.txt";
-            FileWriter fw = new FileWriter(filename,true); //the true will append the new data
-            fw.write(nextUrl + "\n");//appends the string to the file
-            fw.close();
+            if (!checkInFile(nextUrl.toString())) {
+                System.out.println("The link did not exist in the file");
+                writeToFile(nextUrl.toString());
+            } else {
+                System.out.println("The link already exists in the file");
+            }
+
         }
     }
 
@@ -78,6 +85,23 @@ public class crawlerClass {
             System.out.println("There is not a https link somewhere");
         }
         return url;
+    }
+
+    public static void writeToFile(String append) throws IOException {
+        String filename = "links.txt";
+        FileWriter fw = new FileWriter(filename,true); //the true will append the new data
+        fw.write(append + "\n");//appends the string to the file
+        fw.close();
+    }
+
+    public static boolean checkInFile(String checkString) throws IOException {
+        Path thePath = Path.of("/home/markus/git/crawler/links.txt/");
+        String list = Files.readString(thePath, StandardCharsets.UTF_8);
+        if (list.contains(checkString)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
