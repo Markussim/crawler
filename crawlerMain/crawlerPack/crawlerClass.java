@@ -9,7 +9,7 @@ import java.net.URL;
 
 public class crawlerClass {
     public static void main(String[] args) throws IOException {
-        URL startUrl = new URL("https://marksism.space/");
+        URL startUrl = new URL("https://google.com");
 
         if (startUrl.getProtocol().equals("https")) { //Checks if the link is in https
             System.out.println("It worked!");
@@ -25,6 +25,12 @@ public class crawlerClass {
 
         URL nextUrl = getUrl(getDataFromUrl(startUrl));
         System.out.println(nextUrl);
+
+        while (true) {
+            String theHtml = getDataFromUrl(nextUrl);
+            System.out.println(getUrl(theHtml));
+            nextUrl = getUrl(theHtml);
+        }
     }
 
     /**
