@@ -9,9 +9,9 @@ import java.nio.file.Path;
 
 public class crawlerClass {
     public static void main(String[] args) throws IOException {
-        URL startUrl = new URL("https://marksism.space");
+        URL startUrl = new URL("https://marksism.space/navbar/school");
 
-        if (startUrl.getProtocol().equals("https")) { //Checks if the link is in https
+        if (startUrl.getProtocol().equals("https")) { //Checks if the staring link is in https
             System.out.println("It worked!");
             try {
                 getDataFromUrl(startUrl); //If it worked, it tries to get the data from that site
@@ -23,18 +23,25 @@ public class crawlerClass {
             System.out.println("It did not work!");
         }
 
-        URL nextUrl = getUrl(getDataFromUrl(startUrl));
+        URL nextUrl = getUrl(getDataFromUrl(startUrl), 0); //This sets nextUrl to the first link on the website
 
+        int i = 0;
         while (true) {
             String theHtml = getDataFromUrl(nextUrl);
-            nextUrl = getUrl(theHtml);
-            if (!checkInFile(nextUrl.toString())) {
-                System.out.println("The link did not exist in the file");
-                writeToFile(nextUrl.toString());
+            nextUrl = getUrl(theHtml, i);
+            System.out.println("Atemping to get link from " + nextUrl);
+            if (!checkInFile(nextUrl.toString())) { //This checks if the link is already in the file
+                System.out.println("The link " + nextUrl.toString() + "did not exist in the file");
+                writeToFile(nextUrl.toString()); //This writes the link to the file
             } else {
-                System.out.println("The link already exists in the file");
+                System.out.println("The link already exists in the file, and the link is " + nextUrl);
+                i++;
             }
-
+            try { //This is just to make it more readable
+                Thread.sleep(1000);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
     }
 
@@ -70,12 +77,18 @@ public class crawlerClass {
      * @return It returns the link
      * @throws MalformedURLException If the url is malformed, it throws this
      */
-    public static URL getUrl(String html) throws MalformedURLException {
+    public static URL getUrl(String html, int itemNUmber) throws MalformedURLException {
         URL url = null;
         if (html.contains("href=\"https://")) {
             String https = "https://"; //This is what it searches for
-
             String afterHttps = html.substring(html.indexOf(https)); //This creates a string of everything that's after the first occurrence
+            int i = 1;
+            while (itemNUmber>=i) { //This loops to get get the next link in the html
+                afterHttps = afterHttps.substring(afterHttps.indexOf(https) + https.length()); //This does the same as last time, but on the text it has already produced
+                afterHttps = afterHttps.substring(afterHttps.indexOf(https)); //I don't fully understand why just doing it two times solves the problem
+                System.out.println("i in getUrl = " + i);
+                i++;
+            }
 
             url = new URL(afterHttps.substring(0, afterHttps.indexOf("\""))); //This is a substring of afterHttps, where it goes from 0 to the length of the link (Really just the first " but that's the same thing)
         } else {
@@ -89,16 +102,12 @@ public class crawlerClass {
         FileWriter fw = new FileWriter(filename,true); //the true will append the new data
         fw.write(append + "\n");//appends the string to the file
         fw.close();
-    }
+    } //Simply writes to the file, really doesn't need an explanation
 
     public static boolean checkInFile(String checkString) throws IOException {
         Path thePath = Path.of("/home/markus/git/crawler/links.txt/");
         String list = Files.readString(thePath, StandardCharsets.UTF_8);
-        if (list.contains(checkString)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+        return list.contains(checkString);
+    } //This checks if something is in the file
 
 }
