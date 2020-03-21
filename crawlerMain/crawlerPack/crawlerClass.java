@@ -17,7 +17,7 @@ public class crawlerClass {
             System.out.println("It worked!");
             try {
                 System.out.println(getDataFromUrl(startUrl));
-            } catch (Exception e) {
+            } catch (Exception e) { //Exception
                 System.out.println("The protocol was correct, but something else went wrong with the site");
             }
 
