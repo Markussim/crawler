@@ -21,6 +21,7 @@ public class crawlerClass {
 
         } else {
             System.out.println("It did not work!");
+            System.exit(0);
         }
 
         URL nextUrl = getUrl(getDataFromUrl(startUrl), 0); //This sets nextUrl to the first link on the website
