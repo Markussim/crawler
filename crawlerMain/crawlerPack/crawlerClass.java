@@ -71,30 +71,7 @@ public class crawlerClass {
      * @throws MalformedURLException If the url is malformed, it throws this
      */
     public static URL getUrl(String html, int itemNUmber) throws MalformedURLException {
-        URL url = null;
-        if (html.contains("href=\"https://")) {
-            String https = "https://"; //This is what it searches for
-            String afterHttps = html.substring(html.indexOf(https)); //This creates a string of everything that's after the first occurrence
-            int i = 0;
-            while (itemNUmber>=i) { //This loops to get get the next link in the html
-                afterHttps = afterHttps.substring(afterHttps.indexOf(https) + https.length()); //This does the same as last time, but on the text it has already produced
-                System.out.println(afterHttps.indexOf(https) + " " + afterHttps.length());
-                afterHttps = afterHttps.substring(afterHttps.indexOf(https));
-                System.out.println("i in getUrl = " + i + " " + afterHttps.indexOf("\"") + " " + afterHttps.length());
-                i++;
-            }
-            System.out.println("Final link to return is " + afterHttps.substring(0, afterHttps.indexOf("\"")));
-
-            url = new URL(afterHttps.substring(0, afterHttps.indexOf("\""))); //This is a substring of afterHttps, where it goes from 0 to the length of the link (Really just the first " but that's the same thing)
-        } else {
-            System.out.println("There is not a https link somewhere");
-        }
-
-        if (checkLink(url)) {
-            return url;
-        } else {
-            return null;
-        }
+        //To be written
     }
 
     public static void writeToFile(String append) throws IOException {
