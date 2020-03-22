@@ -9,24 +9,14 @@ import java.nio.file.Path;
 
 public class crawlerClass {
     public static void main(String[] args) throws IOException {
-        URL startUrl = new URL("https://marksism.space/navbar/school");
+        URL startUrl = new URL("https://marksism.space");
 
-        if (startUrl.getProtocol().equals("https")) { //Checks if the staring link is in https
-            System.out.println("It worked!");
-            try {
-                getDataFromUrl(startUrl); //If it worked, it tries to get the data from that site
-            } catch (Exception e) {
-                System.out.println("The protocol was correct, but something else went wrong with the site");
-            }
-
-        } else {
-            System.out.println("It did not work!");
-            System.exit(0);
-        }
+        checkLink(startUrl);
 
         URL nextUrl = getUrl(getDataFromUrl(startUrl), 0); //This sets nextUrl to the first link on the website
 
         int i = 0;
+
         while (true) {
             String theHtml = getDataFromUrl(nextUrl);
             nextUrl = getUrl(theHtml, i);
@@ -38,12 +28,12 @@ public class crawlerClass {
                 System.out.println("The link already exists in the file, and the link is " + nextUrl);
                 i++;
             }
-            try { //This is just to make it more readable
+            /*try { //This is just to make it more readable
                 Thread.sleep(1000);
             } catch (Exception e) {
                 System.out.println("e");
                 break;
-            }
+            }*/
         }
     }
 
@@ -70,6 +60,12 @@ public class crawlerClass {
 
         returnString = theBuffer.toString();
 
+        try {
+            Thread.sleep(1000);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
         return returnString;
     }
 
@@ -84,19 +80,26 @@ public class crawlerClass {
         if (html.contains("href=\"https://")) {
             String https = "https://"; //This is what it searches for
             String afterHttps = html.substring(html.indexOf(https)); //This creates a string of everything that's after the first occurrence
-            int i = 1;
+            int i = 0;
             while (itemNUmber>=i) { //This loops to get get the next link in the html
                 afterHttps = afterHttps.substring(afterHttps.indexOf(https) + https.length()); //This does the same as last time, but on the text it has already produced
-                afterHttps = afterHttps.substring(afterHttps.indexOf(https)); //I don't fully understand why just doing it two times solves the problem
-                System.out.println("i in getUrl = " + i);
+                System.out.println(afterHttps.indexOf(https) + " " + afterHttps.length());
+                afterHttps = afterHttps.substring(afterHttps.indexOf(https));
+                System.out.println("i in getUrl = " + i + " " + afterHttps.indexOf("\"") + " " + afterHttps.length());
                 i++;
             }
+            System.out.println("Final link to return is " + afterHttps.substring(0, afterHttps.indexOf("\"")));
 
             url = new URL(afterHttps.substring(0, afterHttps.indexOf("\""))); //This is a substring of afterHttps, where it goes from 0 to the length of the link (Really just the first " but that's the same thing)
         } else {
             System.out.println("There is not a https link somewhere");
         }
-        return url;
+
+        if (checkLink(url)) {
+            return url;
+        } else {
+            return null;
+        }
     }
 
     public static void writeToFile(String append) throws IOException {
@@ -111,5 +114,22 @@ public class crawlerClass {
         String list = Files.readString(thePath, StandardCharsets.UTF_8);
         return list.contains(checkString);
     } //This checks if something is in the file
+
+    public static boolean checkLink(URL theUrl) {
+        if (theUrl.getProtocol().equals("https")) { //Checks if the staring link is in https
+            System.out.println("It worked!");
+            try {
+                getDataFromUrl(theUrl); //If it worked, it tries to get the data from that site
+                return true;
+            } catch (Exception e) {
+                System.out.println("The protocol was correct, but something else went wrong with the site");
+                return false;
+            }
+
+        } else {
+            System.out.println("It did not work!");
+            return false;
+        }
+    }
 
 }
