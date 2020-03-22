@@ -71,7 +71,26 @@ public class crawlerClass {
      * @throws MalformedURLException If the url is malformed, it throws this
      */
     public static URL getUrl(String html, int itemNUmber) throws MalformedURLException {
-        //To be writtenn
+        String https = "https://";
+        if (html.contains("href=\"" + https)) {
+            URL url;
+            int indexOfHttps = html.indexOf(https);
+
+            String newHtml = html.substring(indexOfHttps);
+
+            if (itemNUmber == 0) {
+                return url = new URL(newHtml.substring(0, newHtml.indexOf("\"")));
+            } else {
+                for (int i = 1; itemNUmber>=i; i++) {
+                    indexOfHttps = newHtml.substring(https.length()).indexOf(https);
+                    newHtml = newHtml.substring(indexOfHttps);
+                }
+                return url = new URL(newHtml.substring(0, newHtml.indexOf("\"")));
+            }
+
+        } else {
+            return null;
+        }
     }
 
     public static void writeToFile(String append) throws IOException {
