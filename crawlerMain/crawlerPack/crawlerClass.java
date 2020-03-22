@@ -20,7 +20,7 @@ public class crawlerClass {
         while (true) {
             String theHtml = getDataFromUrl(nextUrl);
             nextUrl = getUrl(theHtml, i);
-            System.out.println("Atemping to get link from " + nextUrl);
+            System.out.println("Attempting to get link from " + nextUrl);
             if (!checkInFile(nextUrl.toString())) { //This checks if the link is already in the file
                 System.out.println("The link " + nextUrl.toString() + "did not exist in the file");
                 writeToFile(nextUrl.toString()); //This writes the link to the file
@@ -28,12 +28,7 @@ public class crawlerClass {
                 System.out.println("The link already exists in the file, and the link is " + nextUrl);
                 i++;
             }
-            /*try { //This is just to make it more readable
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                System.out.println("e");
-                break;
-            }*/
+
         }
     }
 
