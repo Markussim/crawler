@@ -71,7 +71,7 @@ public class crawlerClass {
      * @throws MalformedURLException If the url is malformed, it throws this
      */
     public static URL getUrl(String html, int itemNUmber) throws MalformedURLException {
-        //To be written
+        //To be writtenn
     }
 
     public static void writeToFile(String append) throws IOException {
